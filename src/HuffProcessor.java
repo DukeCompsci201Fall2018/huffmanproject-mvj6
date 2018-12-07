@@ -55,14 +55,15 @@ public class HuffProcessor {
 		out.close();
 	}
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
-		String code = codings['A'];
-		out.writeBits(code.length(), Integer.parseInt(code, 2));
 		
-		
+		for (int i = 0; i < PSEUDO_EOF + 1; i++) {
+			String code = codings['A' + i];
+			out.writeBits(code.length(), Integer.parseInt(code, 2));
+		}	
 	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out) {
-		if (root.myLeft == null || root.myRight == null){
+		if (root.myLeft == null && root.myRight == null){
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
 		}
@@ -113,7 +114,7 @@ public class HuffProcessor {
 		}
 		
 		HuffNode root = pq.remove();
-		return null;
+		return root;
 	}
 
 	private int[] readForCounts(BitInputStream in) {
@@ -162,6 +163,11 @@ public class HuffProcessor {
 			else {
 				if (bits == 0) current = current.myLeft;
 				else current = current.myRight;
+				
+				if (current == null){
+					System.out.println("AHHH");
+					break;
+				}
 				
 				if (current.myLeft == null && current.myRight == null){
 					if (current.myValue == PSEUDO_EOF) break;
