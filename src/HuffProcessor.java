@@ -66,6 +66,7 @@ public class HuffProcessor {
 				return;
 			}
 			code = codings[inStuff];
+			//System.out.println(code);
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
 			
 			code = codings[PSEUDO_EOF];
@@ -107,16 +108,21 @@ public class HuffProcessor {
 	}
 
 
-	private String path = "";
+	
 	private void codingHelper(HuffNode root, String s, String[] encodings) {
+		String path = "";
 		path = path + s;
 		if (root.myLeft == null && root.myRight == null){
 			encodings[root.myValue] = path;
 			return;
 		}
 
-		codingHelper(root.myLeft, "0", encodings);
-		codingHelper(root.myRight, "1", encodings);
+		if(root.myLeft != null) {
+			codingHelper(root.myLeft, "0", encodings);
+		}
+		if (root.myRight != null) {
+			codingHelper(root.myRight, "1", encodings);
+		}
 	}
 
 	private HuffNode makeTreeFromCounts(int[] counts) {
