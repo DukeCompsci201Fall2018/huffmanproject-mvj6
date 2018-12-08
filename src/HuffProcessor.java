@@ -63,16 +63,14 @@ public class HuffProcessor {
 			if (inStuff == -1) {
 				code = codings[PSEUDO_EOF];
 				out.writeBits(code.length(), Integer.parseInt(code, 2));
-				break;
+				return;
 			}
 			code = codings[inStuff];
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
+			
+			code = codings[PSEUDO_EOF];
+			out.writeBits(code.length(), Integer.parseInt(code, 2));
 		}
-
-	
-
-
-
 
 
 
@@ -88,9 +86,15 @@ public class HuffProcessor {
 		else {
 			out.writeBits(1, 0);
 		}
+		
+		if(root.myLeft != null){
+			writeHeader(root.myLeft, out);
+		}
+		
+		if(root.myRight != null){
+			writeHeader(root.myRight, out);
+		}
 
-		writeHeader(root.myLeft, out);
-		writeHeader(root.myRight, out);
 
 
 	}
@@ -143,6 +147,7 @@ public class HuffProcessor {
 			freq[bit]+=1;
 			bit = in.readBits(BITS_PER_WORD);
 		}
+		
 		freq[PSEUDO_EOF] = 1;
 
 		return freq;
