@@ -66,13 +66,9 @@ public class HuffProcessor {
 				return;
 			}
 			code = codings[inStuff];
-			//System.out.println(code);
-			out.writeBits(code.length(), Integer.parseInt(code, 2));
+			out.writeBits(code.length(), Integer.parseInt(code,2));
 			
-			code = codings[PSEUDO_EOF];
-			out.writeBits(code.length(), Integer.parseInt(code, 2));
 		}
-
 
 
 	}
